@@ -5,7 +5,8 @@
 ```bash
 docker pull "registry.cn-hangzhou.aliyuncs.com/masx200/claudewebui:1.5.0"
 ```
-
+# claudecodeui
+Claude Code UI - A modern web interface for Claude AI coding assistance
 <div align="center">
   <img src="public/logo.svg" alt="Claude Code UI" width="64" height="64">
   <h1>Claude Code UI</h1>
@@ -286,3 +287,4 @@ GPL v3 license.
 <div align="center">
   <strong>Made with care for the Claude Code community.</strong>
 </div>
+
