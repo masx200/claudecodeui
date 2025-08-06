@@ -43,7 +43,7 @@
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.515.0",
     "mime-types": "^3.0.1",
-    "multer": "^2.0.1",
+    "multer": "^2.0.2",
     "node-fetch": "^2.7.0",
     "node-pty": "^1.0.0",
     "react": "^18.2.0",
