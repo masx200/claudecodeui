@@ -1,43 +1,43 @@
-import React, { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import ClaudeLogo from './ClaudeLogo';
+import React, { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import ClaudeLogo from "./ClaudeLogo";
 
 const SetupForm = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  
+  const [error, setError] = useState("");
+
   const { register } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    
+    setError("");
+
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
-    
+
     if (username.length < 3) {
-      setError('Username must be at least 3 characters long');
+      setError("Username must be at least 3 characters long");
       return;
     }
-    
+
     if (password.length < 6) {
-      setError('Password must be at least 6 characters long');
+      setError("Password must be at least 6 characters long");
       return;
     }
-    
+
     setIsLoading(true);
-    
+
     const result = await register(username, password);
-    
+
     if (!result.success) {
       setError(result.error);
     }
-    
+
     setIsLoading(false);
   };
 
@@ -50,7 +50,9 @@ const SetupForm = () => {
             <div className="flex justify-center mb-4">
               <ClaudeLogo size={64} />
             </div>
-            <h1 className="text-2xl font-bold text-foreground">Welcome to Claude Code UI</h1>
+            <h1 className="text-2xl font-bold text-foreground">
+              Welcome to Claude Code UI
+            </h1>
             <p className="text-muted-foreground mt-2">
               Set up your account to get started
             </p>
@@ -59,7 +61,10 @@ const SetupForm = () => {
           {/* Setup Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-foreground mb-1">
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-foreground mb-1"
+              >
                 Username
               </label>
               <input
@@ -75,7 +80,10 @@ const SetupForm = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-foreground mb-1">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-foreground mb-1"
+              >
                 Password
               </label>
               <input
@@ -91,7 +99,10 @@ const SetupForm = () => {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-foreground mb-1">
+              <label
+                htmlFor="confirmPassword"
+                className="block text-sm font-medium text-foreground mb-1"
+              >
                 Confirm Password
               </label>
               <input
@@ -108,7 +119,9 @@ const SetupForm = () => {
 
             {error && (
               <div className="p-3 bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-800 rounded-md">
-                <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
+                <p className="text-sm text-red-700 dark:text-red-400">
+                  {error}
+                </p>
               </div>
             )}
 
@@ -117,7 +130,7 @@ const SetupForm = () => {
               disabled={isLoading}
               className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
             >
-              {isLoading ? 'Setting up...' : 'Create Account'}
+              {isLoading ? "Setting up..." : "Create Account"}
             </button>
           </form>
 

@@ -1,9 +1,11 @@
-import React from 'react';
-import { Button } from './ui/button';
-import { X } from 'lucide-react';
+import React from "react";
+import { Button } from "./ui/button";
+import { X } from "lucide-react";
 
 function ImageViewer({ file, onClose }) {
-  const imagePath = `/api/projects/${file.projectName}/files/content?path=${encodeURIComponent(file.path)}`;
+  const imagePath = `/api/projects/${file.projectName}/files/content?path=${
+    encodeURIComponent(file.path)
+  }`;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -28,13 +30,13 @@ function ImageViewer({ file, onClose }) {
             alt={file.name}
             className="max-w-full max-h-[70vh] object-contain rounded-lg shadow-md"
             onError={(e) => {
-              e.target.style.display = 'none';
-              e.target.nextSibling.style.display = 'block';
+              e.target.style.display = "none";
+              e.target.nextSibling.style.display = "block";
             }}
           />
           <div
             className="text-center text-gray-500 dark:text-gray-400"
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
           >
             <p>Unable to load image</p>
             <p className="text-sm mt-2">{file.path}</p>

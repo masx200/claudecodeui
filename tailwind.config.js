@@ -55,9 +55,9 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       spacing: {
-        'safe-area-inset-bottom': 'env(safe-area-inset-bottom)',
+        "safe-area-inset-bottom": "env(safe-area-inset-bottom)",
       },
     },
   },
-  plugins: [require('@tailwindcss/typography')],
-}
+  plugins: [require("@tailwindcss/typography")],
+};
