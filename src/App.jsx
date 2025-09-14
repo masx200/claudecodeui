@@ -31,6 +31,7 @@ import MainContent from "./components/MainContent";
 import MobileNav from "./components/MobileNav";
 import ToolsSettings from "./components/ToolsSettings";
 import QuickSettingsPanel from "./components/QuickSettingsPanel";
+import ResizableSplitView from "./components/ResizableSplitView";
 
 import { useWebSocket } from "./utils/websocket";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -580,11 +581,11 @@ function AppContent() {
   };
 
   return (
-    <div className="fixed inset-0 flex bg-background">
-      {/* Fixed Desktop Sidebar */}
-      {!isMobile && (
-        <div className="w-80 flex-shrink-0 border-r border-border bg-card">
-          <div className="h-full overflow-hidden">
+    <div className="fixed inset-0 bg-background">
+      {/* Desktop Resizable Layout */}
+      {!isMobile ? (
+        <ResizableSplitView
+          left={
             <Sidebar
               projects={projects}
               selectedProject={selectedProject}
@@ -602,82 +603,109 @@ function AppContent() {
               currentVersion={currentVersion}
               onShowVersionModal={() => setShowVersionModal(true)}
             />
-          </div>
-        </div>
-      )}
-
-      {/* Mobile Sidebar Overlay */}
-      {isMobile && (
-        <div
-          className={`fixed inset-0 z-50 flex transition-all duration-150 ease-out ${
-            sidebarOpen ? "opacity-100 visible" : "opacity-0 invisible"
-          }`}
-        >
-          <div
-            className="fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity duration-150 ease-out"
-            onClick={(e) => {
-              e.stopPropagation();
-              setSidebarOpen(false);
-            }}
-            onTouchStart={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setSidebarOpen(false);
-            }}
-          />
-          <div
-            className={`relative w-[85vw] max-w-sm sm:w-80 bg-card border-r border-border h-full transform transition-transform duration-150 ease-out ${
-              sidebarOpen ? "translate-x-0" : "-translate-x-full"
-            }`}
-            onClick={(e) => e.stopPropagation()}
-            onTouchStart={(e) => e.stopPropagation()}
-          >
-            <Sidebar
-              projects={projects}
+          }
+          right={
+            <MainContent
               selectedProject={selectedProject}
               selectedSession={selectedSession}
-              onProjectSelect={handleProjectSelect}
-              onSessionSelect={handleSessionSelect}
-              onNewSession={handleNewSession}
-              onSessionDelete={handleSessionDelete}
-              onProjectDelete={handleProjectDelete}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              ws={ws}
+              sendMessage={sendMessage}
+              messages={messages}
+              isMobile={isMobile}
+              onMenuClick={() => setSidebarOpen(true)}
               isLoading={isLoadingProjects}
-              onRefresh={handleSidebarRefresh}
+              onInputFocusChange={setIsInputFocused}
+              onSessionActive={markSessionAsActive}
+              onSessionInactive={markSessionAsInactive}
+              onReplaceTemporarySession={replaceTemporarySession}
+              onNavigateToSession={(sessionId) => navigate(`/session/${sessionId}`)}
               onShowSettings={() => setShowToolsSettings(true)}
-              updateAvailable={updateAvailable}
-              latestVersion={latestVersion}
-              currentVersion={currentVersion}
-              onShowVersionModal={() => setShowVersionModal(true)}
+              autoExpandTools={autoExpandTools}
+              showRawParameters={showRawParameters}
+              autoScrollToBottom={autoScrollToBottom}
+              sendByCtrlEnter={sendByCtrlEnter}
             />
-          </div>
-        </div>
-      )}
-
-      {/* Main Content Area - Flexible */}
-      <div className="flex-1 flex flex-col min-w-0">
-        <MainContent
-          selectedProject={selectedProject}
-          selectedSession={selectedSession}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          ws={ws}
-          sendMessage={sendMessage}
-          messages={messages}
-          isMobile={isMobile}
-          onMenuClick={() => setSidebarOpen(true)}
-          isLoading={isLoadingProjects}
-          onInputFocusChange={setIsInputFocused}
-          onSessionActive={markSessionAsActive}
-          onSessionInactive={markSessionAsInactive}
-          onReplaceTemporarySession={replaceTemporarySession}
-          onNavigateToSession={(sessionId) => navigate(`/session/${sessionId}`)}
-          onShowSettings={() => setShowToolsSettings(true)}
-          autoExpandTools={autoExpandTools}
-          showRawParameters={showRawParameters}
-          autoScrollToBottom={autoScrollToBottom}
-          sendByCtrlEnter={sendByCtrlEnter}
+          }
+          minLeftWidth={240}
+          maxLeftWidth={500}
+          defaultLeftWidth={320}
         />
-      </div>
+      ) : (
+        <>
+          {/* Mobile Sidebar Overlay */}
+          <div
+            className={`fixed inset-0 z-50 flex transition-all duration-150 ease-out ${
+              sidebarOpen ? "opacity-100 visible" : "opacity-0 invisible"
+            }`}
+          >
+            <div
+              className="fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity duration-150 ease-out"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSidebarOpen(false);
+              }}
+              onTouchStart={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setSidebarOpen(false);
+              }}
+            />
+            <div
+              className={`relative w-[85vw] max-w-sm sm:w-80 bg-card border-r border-border h-full transform transition-transform duration-150 ease-out ${
+                sidebarOpen ? "translate-x-0" : "-translate-x-full"
+              }`}
+              onClick={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
+            >
+              <Sidebar
+                projects={projects}
+                selectedProject={selectedProject}
+                selectedSession={selectedSession}
+                onProjectSelect={handleProjectSelect}
+                onSessionSelect={handleSessionSelect}
+                onNewSession={handleNewSession}
+                onSessionDelete={handleSessionDelete}
+                onProjectDelete={handleProjectDelete}
+                isLoading={isLoadingProjects}
+                onRefresh={handleSidebarRefresh}
+                onShowSettings={() => setShowToolsSettings(true)}
+                updateAvailable={updateAvailable}
+                latestVersion={latestVersion}
+                currentVersion={currentVersion}
+                onShowVersionModal={() => setShowVersionModal(true)}
+              />
+            </div>
+          </div>
+
+          {/* Mobile Main Content Area */}
+          <div className="flex flex-col h-full">
+            <MainContent
+              selectedProject={selectedProject}
+              selectedSession={selectedSession}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              ws={ws}
+              sendMessage={sendMessage}
+              messages={messages}
+              isMobile={isMobile}
+              onMenuClick={() => setSidebarOpen(true)}
+              isLoading={isLoadingProjects}
+              onInputFocusChange={setIsInputFocused}
+              onSessionActive={markSessionAsActive}
+              onSessionInactive={markSessionAsInactive}
+              onReplaceTemporarySession={replaceTemporarySession}
+              onNavigateToSession={(sessionId) => navigate(`/session/${sessionId}`)}
+              onShowSettings={() => setShowToolsSettings(true)}
+              autoExpandTools={autoExpandTools}
+              showRawParameters={showRawParameters}
+              autoScrollToBottom={autoScrollToBottom}
+              sendByCtrlEnter={sendByCtrlEnter}
+            />
+          </div>
+        </>
+      )}
 
       {/* Mobile Bottom Navigation */}
       {isMobile && (
